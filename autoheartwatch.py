@@ -222,7 +222,7 @@ class HeartApp:
         draw = wasp.watch.drawable
         draw.fill()
         draw.set_color(wasp.system.theme("bright"))
-        draw.string("PPG graph", 0, 6, width=240)
+        draw.string("Gene PPG graph", 0, 6, width=240)
 
         wasp.system.request_tick(1000 // 8)
 
