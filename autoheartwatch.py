@@ -2,7 +2,6 @@ import array
 import micropython
 import watch
 
-
 @micropython.viper
 def _compare(d1, d2, count: int, shift: int) -> int:
     """Compare two sequences of (signed) bytes and quantify how dissimilar
@@ -24,7 +23,6 @@ def _compare(d1, d2, count: int, shift: int) -> int:
         d = s1 - s2
         e += d * d
     return e
-
 
 class Biquad:
     """Direct Form II Biquad Filter"""
@@ -78,13 +76,9 @@ class PTAGC:
 
         # booster
         spl = 100 * spl / (2 * peak)
-
         return spl
 
-
 class PPG:
-    """ """
-
     def __init__(self, spl):
         self._offset = spl
         self.data = array.array("b")
@@ -198,11 +192,9 @@ Finally to download the logs for analysis try:
 .. code-block:: sh
     ./tools/wasptool --pull hrs.data
 """
-
 import wasp
 import machine
 # import ppg
-
 
 class HeartApp:
     """Heart rate monitor application."""
@@ -222,7 +214,7 @@ class HeartApp:
         draw = wasp.watch.drawable
         draw.fill()
         draw.set_color(wasp.system.theme("bright"))
-        draw.string("Gene PPG graph", 0, 6, width=240)
+        draw.string("G2 PPG graph", 0, 6, width=240)
 
         wasp.system.request_tick(1000 // 8)
 
@@ -240,10 +232,13 @@ class HeartApp:
         draw = wasp.watch.drawable
 
         spl = self._hrdata.preprocess(wasp.watch.hrs.read_hrs())
+        if len(self._hrdata.data) >= 240:
+            draw.string("{}HR".format(wasp.watch.hrs.read_hrs()), 0, 6, width=80)
 
         if len(self._hrdata.data) >= 240:
             draw.set_color(wasp.system.theme("bright"))
-            draw.string("{} bpm".format(self._hrdata.get_heart_rate()), 0, 6, width=240)
+            draw.string("           ", 0, 6, width=240)
+            draw.string("{} bpm".format(self._hrdata.get_heart_rate()), 80, 6, width=80)
 
         # Graph is orange by default...
         color = wasp.system.theme("spot1")
@@ -257,8 +252,9 @@ class HeartApp:
 
         x = self._x
         draw.fill(0, x, 32, 1, 208 - spl)
-        draw.fill(color, x, 239 - spl, 1, spl) 
-        draw.string(spl, 0, 12, width=240)
+        draw.fill(color, x, 239 - spl, 1, spl)
+        if x % 10 == 0:
+            draw.string("{}".format(spl), 160, 6, width=80)
         if x < 238:
             draw.fill(0, x + 1, 32, 2, 208)
         x += 2
