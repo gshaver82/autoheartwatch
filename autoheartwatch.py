@@ -226,7 +226,7 @@ class HeartApp:
 
         wasp.system.request_tick(1000 // 8)
 
-        self._hrdata = ppg.PPG(wasp.watch.hrs.read_hrs())
+        self._hrdata = PPG(wasp.watch.hrs.read_hrs())
         if self._debug:
             self._hrdata.enable_debug()
         self._x = 0
@@ -257,7 +257,8 @@ class HeartApp:
 
         x = self._x
         draw.fill(0, x, 32, 1, 208 - spl)
-        draw.fill(color, x, 239 - spl, 1, spl)
+        draw.fill(color, x, 239 - spl, 1, spl) 
+        draw.string(spl, 0, 12, width=240)
         if x < 238:
             draw.fill(0, x + 1, 32, 2, 208)
         x += 2
